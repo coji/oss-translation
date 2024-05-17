@@ -1,0 +1,6 @@
+[submodule "projects/remix"]
+	path = projects/remix
+	url = https://github.com/coji/remix
+[submodule "projects/conform"]
+	path = projects/conform
+	url = git@github.com:coji/conform.git
