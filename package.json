@@ -43,6 +43,8 @@
     "next-themes": "^0.3.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "remix-routes": "^1.7.4",
+    "remix-toast": "^1.2.0",
     "sonner": "^1.4.41",
     "tailwind-merge": "^2.3.0",
     "ts-pattern": "^5.1.1",
