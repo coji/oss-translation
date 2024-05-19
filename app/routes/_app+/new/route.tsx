@@ -6,7 +6,7 @@ import {
 } from '@conform-to/react'
 import { parseWithZod } from '@conform-to/zod'
 import type { ActionFunctionArgs } from '@remix-run/node'
-import { Form, Link, useActionData } from '@remix-run/react'
+import { Form, Link, redirect, useActionData } from '@remix-run/react'
 import fs from 'node:fs/promises'
 import path from 'node:path'
 import { z } from 'zod'
@@ -23,6 +23,7 @@ import {
   Textarea,
 } from '~/components/ui'
 import { Stack } from '~/components/ui/stack'
+import { createProject } from './mutations.server'
 
 const schema = z.object({
   name: z.string(),
@@ -54,7 +55,8 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     }
   }
 
-  return { lastResult: submission.reply() }
+  const project = await createProject(submission.value)
+  return redirect('/')
 }
 
 export default function NewProjectPage() {
