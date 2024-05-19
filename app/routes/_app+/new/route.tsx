@@ -5,8 +5,8 @@ import {
   useForm,
 } from '@conform-to/react'
 import { parseWithZod } from '@conform-to/zod'
-import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node'
-import { Form, Link, useActionData, useLoaderData } from '@remix-run/react'
+import type { ActionFunctionArgs } from '@remix-run/node'
+import { Form, Link, useActionData } from '@remix-run/react'
 import fs from 'node:fs/promises'
 import path from 'node:path'
 import { z } from 'zod'
@@ -29,11 +29,6 @@ const schema = z.object({
   description: z.string().optional(),
   path: z.string(),
 })
-
-export const loader = async ({ request }: LoaderFunctionArgs) => {
-  const dir = await fs.readdir('./projects')
-  return { dir }
-}
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   const submission = parseWithZod(await request.formData(), { schema })
@@ -63,7 +58,6 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 }
 
 export default function NewProjectPage() {
-  const { dir } = useLoaderData<typeof loader>()
   const actionData = useActionData<typeof action>()
   const [form, { name, description, path }] = useForm({
     lastResult: actionData?.lastResult,
