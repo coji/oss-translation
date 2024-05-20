@@ -48,17 +48,22 @@ export default function Index() {
               {projects.map((project) => (
                 <TableRow key={project.id}>
                   <TableCell>{project.id}</TableCell>
-                  <TableCell>{project.name}</TableCell>
                   <TableCell>{project.description}</TableCell>
-                  <TableCell>{project.path}</TableCell>
+                  <TableCell>{project.pattern}</TableCell>
                   <TableCell>{project.createdAt.toISOString()}</TableCell>
                 </TableRow>
               ))}
+              {projects.length === 0 && (
+                <TableCell
+                  colSpan={5}
+                  className="text-center text-muted-foreground"
+                >
+                  No projects yet.
+                </TableCell>
+              )}
             </TableBody>
           </Table>
         </div>
-
-        {projects.length === 0 && <div>No projects yet.</div>}
       </CardContent>
       <CardFooter>
         <Button type="button" variant="default" asChild>

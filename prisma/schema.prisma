@@ -14,12 +14,62 @@ datasource db {
 }
 
 model Project {
-  id          Int      @id @default(autoincrement())
-  name        String
-  description String?
-  path        String
-  updatedAt   DateTime @default(now()) @updatedAt
-  createdAt   DateTime @default(now())
+  id             String           @id
+  description    String?
+  path           String
+  pattern        String
+  updatedAt      DateTime         @default(now()) @updatedAt
+  createdAt      DateTime         @default(now())
+  TranslationJob TranslationJob[]
+  File           File[]
 
   @@map("projects")
+}
+
+model File {
+  path         String    @id
+  projectId    String    @map("project_id")
+  content      String
+  contentMD5   String    @map("content_md5")
+  isUpdated    Boolean   @default(false)
+  output       String?
+  translatedAt DateTime? @map("translated_at")
+  updatedAt    DateTime  @default(now()) @updatedAt
+  createdAt    DateTime  @default(now())
+  Project      Project   @relation(fields: [projectId], references: [id])
+
+  @@map("files")
+}
+
+model TranslationJob {
+  id              Int               @id @default(autoincrement())
+  projectId       String            @map("project_id")
+  Project         Project           @relation(fields: [projectId], references: [id])
+  fileCount       Int               @map("file_count")
+  translatedCount Int               @map("translated_count")
+  status          String // running, completed, failed
+  promptTokens    Int               @map("prompt_tokens")
+  outputTokens    Int               @map("output_tokens")
+  updatedAt       DateTime          @default(now()) @updatedAt
+  createdAt       DateTime          @default(now())
+  TranslationTask TranslationTask[]
+
+  @@map("translation_jobs")
+}
+
+model TranslationTask {
+  id             Int            @id @default(autoincrement())
+  jobId          Int            @map("job_id")
+  TranslationJob TranslationJob @relation(fields: [jobId], references: [id])
+  source         String
+  target         String
+  status         String // running, completed, failed
+  promptTokens   Int            @map("prompt_tokens")
+  outputTokens   Int            @map("output_tokens")
+  prompt         String
+  output         String
+  updatedAt      DateTime       @default(now()) @updatedAt
+  createdAt      DateTime       @default(now())
+
+  @@map("translation_tasks")
 }

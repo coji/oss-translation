@@ -1,9 +1,0 @@
--- CreateTable
-CREATE TABLE "projects" (
-    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-    "name" TEXT NOT NULL,
-    "description" TEXT,
-    "path" TEXT NOT NULL,
-    "updatedAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
-);

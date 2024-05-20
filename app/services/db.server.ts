@@ -8,7 +8,5 @@ export const db = new PrismaClient({
 })
 
 db.$on('query', (e) => {
-  debug(`Query: ${e.query}`)
-  debug(`Params: ${e.params}`)
-  debug(`Duration: ${e.duration}ms`)
+  debug(`${e.query}, ${e.params}, ${e.duration}ms`)
 })

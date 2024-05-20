@@ -23,12 +23,14 @@ import {
   Textarea,
 } from '~/components/ui'
 import { Stack } from '~/components/ui/stack'
-import { createProject } from './mutations.server'
+import { globProject } from './functions/project-glob.server'
+import { createFiles, createProject } from './mutations.server'
 
 const schema = z.object({
-  name: z.string(),
-  description: z.string().optional(),
+  id: z.string(),
   path: z.string(),
+  pattern: z.string(),
+  description: z.string().optional(),
 })
 
 export const action = async ({ request }: ActionFunctionArgs) => {
@@ -38,7 +40,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   }
 
   const stat = await fs
-    .stat(path.join('./projects', submission.value.path))
+    .stat(path.join('./projects', submission.value.id))
     .catch(() => null)
   if (!stat) {
     return {
@@ -56,12 +58,15 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   }
 
   const project = await createProject(submission.value)
+  const files = await globProject(project)
+  await createFiles(project, files)
+
   return redirect('/')
 }
 
 export default function NewProjectPage() {
   const actionData = useActionData<typeof action>()
-  const [form, { name, description, path }] = useForm({
+  const [form, { id, path, pattern, description }] = useForm({
     lastResult: actionData?.lastResult,
     onValidate: ({ formData }) => parseWithZod(formData, { schema }),
   })
@@ -76,13 +81,26 @@ export default function NewProjectPage() {
         <CardContent>
           <Stack>
             <div>
-              <Label htmlFor={name.id}>Name</Label>
-              <Input {...getInputProps(name, { type: 'text' })} />
-              <div id={name.errorId} className="text-sm text-destructive">
-                {name.errors}
+              <Label htmlFor={id.id}>Name</Label>
+              <Input {...getInputProps(id, { type: 'text' })} />
+              <div id={id.errorId} className="text-sm text-destructive">
+                {id.errors}
               </div>
             </div>
-
+            <div>
+              <Label>Document Path</Label>
+              <Input {...getInputProps(path, { type: 'text' })} />
+              <div id={path.errorId} className="text-sm text-destructive">
+                {path.errors}
+              </div>
+            </div>
+            <div>
+              <Label>Glob Pattern</Label>
+              <Input {...getInputProps(pattern, { type: 'text' })} />
+              <div id={pattern.errorId} className="text-sm text-destructive">
+                {pattern.errors}
+              </div>
+            </div>
             <div>
               <Label htmlFor={description.id}>Description</Label>
               <Textarea {...getTextareaProps(description)} />
@@ -92,15 +110,7 @@ export default function NewProjectPage() {
               >
                 {description.errors}
               </div>
-            </div>
-
-            <div>
-              <Label>Path</Label>
-              <Input {...getInputProps(path, { type: 'text' })} />
-              <div id={path.errorId} className="text-sm text-destructive">
-                {path.errors}
-              </div>
-            </div>
+            </div>{' '}
           </Stack>
         </CardContent>
         <CardFooter>
