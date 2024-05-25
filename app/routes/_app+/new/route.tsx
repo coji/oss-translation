@@ -9,6 +9,7 @@ import type { ActionFunctionArgs } from '@remix-run/node'
 import { Form, Link, redirect, useActionData } from '@remix-run/react'
 import fs from 'node:fs/promises'
 import path from 'node:path'
+import { $path } from 'remix-routes'
 import { z } from 'zod'
 import {
   Button,
@@ -61,7 +62,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   const files = await globProject(project)
   await createFiles(project, files)
 
-  return redirect('/')
+  return redirect($path('/'))
 }
 
 export default function NewProjectPage() {
@@ -110,12 +111,13 @@ export default function NewProjectPage() {
               >
                 {description.errors}
               </div>
-            </div>{' '}
+            </div>
           </Stack>
         </CardContent>
-        <CardFooter>
+
+        <CardFooter className="flex flex-col items-stretch gap-2 sm:flex-row">
           <Button type="button" variant="ghost" asChild>
-            <Link to="/">Cancel</Link>
+            <Link to={$path('/')}>Cancel</Link>
           </Button>
 
           <Button type="submit">Create Project</Button>

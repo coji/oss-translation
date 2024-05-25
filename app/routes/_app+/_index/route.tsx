@@ -1,5 +1,6 @@
 import type { LoaderFunctionArgs } from '@remix-run/node'
-import { Link, useLoaderData } from '@remix-run/react'
+import { Link, useLoaderData, useNavigate } from '@remix-run/react'
+import { $path } from 'remix-routes'
 import {
   Button,
   Card,
@@ -23,6 +24,8 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 
 export default function Index() {
   const { projects } = useLoaderData<typeof loader>()
+  const navigate = useNavigate()
+
   return (
     <Card>
       <CardHeader>
@@ -38,17 +41,26 @@ export default function Index() {
             <TableHeader>
               <TableRow>
                 <TableCell>ID</TableCell>
-                <TableCell>Name</TableCell>
                 <TableCell>Description</TableCell>
                 <TableCell>Path</TableCell>
+                <TableCell>Pattern</TableCell>
                 <TableCell>Created At</TableCell>
               </TableRow>
             </TableHeader>
             <TableBody>
               {projects.map((project) => (
-                <TableRow key={project.id}>
+                <TableRow
+                  key={project.id}
+                  className="hover:cursor-pointer"
+                  onClick={() => {
+                    navigate(
+                      $path('/projects/:project', { project: project.id }),
+                    )
+                  }}
+                >
                   <TableCell>{project.id}</TableCell>
                   <TableCell>{project.description}</TableCell>
+                  <TableCell>{project.path}</TableCell>
                   <TableCell>{project.pattern}</TableCell>
                   <TableCell>{project.createdAt.toISOString()}</TableCell>
                 </TableRow>
@@ -67,7 +79,7 @@ export default function Index() {
       </CardContent>
       <CardFooter>
         <Button type="button" variant="default" asChild>
-          <Link to="/new">New</Link>
+          <Link to={$path('/new')}>New</Link>
         </Button>
       </CardFooter>
     </Card>

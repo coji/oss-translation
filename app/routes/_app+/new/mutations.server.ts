@@ -2,10 +2,10 @@ import type { Prisma, Project } from '@prisma/client'
 import crypto from 'node:crypto'
 import fs from 'node:fs/promises'
 import path from 'node:path'
-import { db } from '~/services/db.server'
+import { prisma } from '~/services/db.server'
 
 export const createProject = async (data: Prisma.ProjectCreateInput) => {
-  return await db.project.create({ data })
+  return await prisma.project.create({ data })
 }
 
 export const createFiles = async (project: Project, files: string[]) => {
@@ -19,7 +19,7 @@ export const createFiles = async (project: Project, files: string[]) => {
     const content = await fs.readFile(filePath, 'utf-8')
     const hash = crypto.createHash('md5')
     const md5sum = hash.update(content).digest('hex')
-    await db.file.create({
+    await prisma.file.create({
       data: {
         path: filePath,
         content,

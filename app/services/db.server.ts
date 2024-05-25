@@ -3,10 +3,10 @@ import createDebug from 'debug'
 
 const debug = createDebug('app:db')
 
-export const db = new PrismaClient({
+export const prisma = new PrismaClient({
   log: [{ emit: 'event', level: 'query' }],
 })
 
-db.$on('query', (e) => {
+prisma.$on('query', (e) => {
   debug(`${e.query}, ${e.params}, ${e.duration}ms`)
 })

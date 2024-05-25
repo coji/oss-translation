@@ -1,7 +1,7 @@
-import { db } from '~/services/db.server'
+import { prisma } from '~/services/db.server'
 
 export const listProjects = async () => {
-  return await db.project.findMany({
+  return await prisma.project.findMany({
     orderBy: { createdAt: 'desc' },
   })
 }
