@@ -27,8 +27,9 @@ model Project {
 }
 
 model File {
-  path         String    @id
+  id           Int       @id @default(autoincrement())
   projectId    String    @map("project_id")
+  path         String
   content      String
   contentMD5   String    @map("content_md5")
   isUpdated    Boolean   @default(false)
@@ -38,6 +39,7 @@ model File {
   createdAt    DateTime  @default(now())
   Project      Project   @relation(fields: [projectId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
+  @@unique([projectId, path])
   @@map("files")
 }
 

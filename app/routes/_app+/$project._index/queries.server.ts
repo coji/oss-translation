@@ -5,6 +5,7 @@ export const getProjectDetails = async (projectId: string) => {
     include: {
       files: {
         select: {
+          id: true,
           path: true,
           isUpdated: true,
           translatedAt: true,

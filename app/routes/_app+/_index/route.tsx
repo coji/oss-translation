@@ -53,9 +53,7 @@ export default function Index() {
                   key={project.id}
                   className="hover:cursor-pointer"
                   onClick={() => {
-                    navigate(
-                      $path('/projects/:project', { project: project.id }),
-                    )
+                    navigate($path('/:project', { project: project.id }))
                   }}
                 >
                   <TableCell>{project.id}</TableCell>
