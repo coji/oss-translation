@@ -23,7 +23,6 @@ import { getProjectDetails } from './queries.server'
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {
   const { project: projectId } = zx.parseParams(params, { project: z.string() })
-  console.log({ projectId, params })
   const project = await getProjectDetails(projectId)
   return { project }
 }
