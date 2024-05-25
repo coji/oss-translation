@@ -14,14 +14,15 @@ datasource db {
 }
 
 model Project {
-  id             String           @id
-  description    String?
-  path           String
-  pattern        String
-  updatedAt      DateTime         @default(now()) @updatedAt
-  createdAt      DateTime         @default(now())
-  TranslationJob TranslationJob[]
-  files          File[]
+  id              String           @id
+  description     String?
+  prompt          String
+  path            String
+  pattern         String
+  updatedAt       DateTime         @default(now()) @updatedAt
+  createdAt       DateTime         @default(now())
+  translationJobs TranslationJob[]
+  files           File[]
 
   @@map("projects")
 }
@@ -63,13 +64,13 @@ model TranslationTask {
   id             Int            @id @default(autoincrement())
   jobId          Int            @map("job_id")
   TranslationJob TranslationJob @relation(fields: [jobId], references: [id])
-  source         String
-  target         String
+  input          String
+  output         String
   status         String // running, completed, failed
   promptTokens   Int            @map("prompt_tokens")
   outputTokens   Int            @map("output_tokens")
   prompt         String
-  output         String
+  generated      String
   updatedAt      DateTime       @default(now()) @updatedAt
   createdAt      DateTime       @default(now())
 

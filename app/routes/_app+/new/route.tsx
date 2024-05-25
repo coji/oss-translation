@@ -32,6 +32,7 @@ const schema = z.object({
   path: z.string(),
   pattern: z.string(),
   description: z.string().optional(),
+  prompt: z.string(),
 })
 
 export const action = async ({ request }: ActionFunctionArgs) => {
@@ -67,8 +68,12 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
 export default function NewProjectPage() {
   const actionData = useActionData<typeof action>()
-  const [form, { id, path, pattern, description }] = useForm({
+  const [form, { id, path, pattern, description, prompt }] = useForm({
     lastResult: actionData?.lastResult,
+    defaultValue: {
+      prompt:
+        'Translate the following text to Japanese. Markdowns should be left intact:',
+    },
     onValidate: ({ formData }) => parseWithZod(formData, { schema }),
   })
 
@@ -110,6 +115,14 @@ export default function NewProjectPage() {
                 className="text-sm text-destructive"
               >
                 {description.errors}
+              </div>
+            </div>
+
+            <div>
+              <Label htmlFor={prompt.id}>Prompt</Label>
+              <Textarea {...getTextareaProps(prompt)} />
+              <div id={prompt.errorId} className="text-sm text-destructive">
+                {prompt.errors}
               </div>
             </div>
           </Stack>

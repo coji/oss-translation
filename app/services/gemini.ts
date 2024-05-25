@@ -15,7 +15,6 @@ export const Models: Record<
   'Gemini 1.5 Flash': 'gemini-1.5-flash-latest' as const,
   'Gemini 1.5 Pro': 'models/gemini-1.5-pro-latest' as const,
 } as const
-export type Claude3Models = z.infer<typeof ModelSchema>
 
 export const callGemini = async ({
   apiKey,

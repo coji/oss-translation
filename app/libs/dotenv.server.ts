@@ -2,7 +2,7 @@ import { z } from 'zod'
 
 const envSchema = z.object({
   DATABASE_URL: z.string(),
-  SESSION_SECRET: z.string(),
+  GEMINI_API_KEY: z.string(),
 })
 envSchema.parse(process.env)
 
