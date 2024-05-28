@@ -24,8 +24,8 @@ import {
   Textarea,
 } from '~/components/ui'
 import { Stack } from '~/components/ui/stack'
+import { createFiles, createProject } from './functions/mutations.server'
 import { globProject } from './functions/project-glob.server'
-import { createFiles, createProject } from './mutations.server'
 
 const schema = z.object({
   id: z.string(),

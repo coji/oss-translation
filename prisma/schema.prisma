@@ -33,7 +33,7 @@ model File {
   path         String
   content      String
   contentMD5   String    @map("content_md5")
-  isUpdated    Boolean   @default(false)
+  isUpdated    Boolean   @default(true)
   output       String?
   translatedAt DateTime? @map("translated_at")
   updatedAt    DateTime  @default(now()) @updatedAt

@@ -1,10 +1,17 @@
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node'
-import { Form, Link, useLoaderData, useNavigate } from '@remix-run/react'
-import { ArrowLeftIcon } from 'lucide-react'
+import {
+  Form,
+  Link,
+  useLoaderData,
+  useNavigate,
+  useNavigation,
+} from '@remix-run/react'
+import { ArrowLeftIcon, LoaderCircleIcon } from 'lucide-react'
 import { $path } from 'remix-routes'
 import { z } from 'zod'
 import { zx } from 'zodix'
 import {
+  Badge,
   Button,
   Card,
   CardContent,
@@ -21,9 +28,11 @@ import {
 } from '~/components/ui'
 
 import dayjs from '~/libs/dayjs'
-import { startTranslationJob } from '~/services/translation.server'
-import { exportFiles } from './functions.server'
-import { getProjectDetails } from './queries.server'
+import {
+  exportFiles,
+  getProjectDetails,
+  startTranslationJob,
+} from './functions.server'
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {
   const { project: projectId } = zx.parseParams(params, { project: z.string() })
@@ -50,7 +59,16 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 
 export default function ProjectDetail() {
   const { project } = useLoaderData<typeof loader>()
+  const navigation = useNavigation()
   const navigate = useNavigate()
+
+  const isSubmitting = navigation.state === 'submitting'
+  const isTranslationInProgress =
+    navigation.state === 'submitting' &&
+    navigation.formData?.get('intent') === 'start-translation-job'
+  const isExportInProgress =
+    navigation.state === 'submitting' &&
+    navigation.formData?.get('intent') === 'export-files'
 
   return (
     <Card>
@@ -74,10 +92,20 @@ export default function ProjectDetail() {
 
         <Form method="POST">
           <HStack>
-            <Button name="intent" value="start-translation-job">
+            <Button
+              name="intent"
+              value="start-translation-job"
+              disabled={isSubmitting}
+            >
+              {isTranslationInProgress && (
+                <LoaderCircleIcon size="16" className="mr-2 animate-spin" />
+              )}
               Start Translation
             </Button>
-            <Button name="intent" value="export-files">
+            <Button name="intent" value="export-files" disabled={isSubmitting}>
+              {isExportInProgress && (
+                <LoaderCircleIcon size="16" className="mr-2 animate-spin" />
+              )}
               Export files
             </Button>
           </HStack>
@@ -115,7 +143,9 @@ export default function ProjectDetail() {
                     .tz()
                     .format('YYYY-MM-DD HH:mm:ss')}
                 </TableCell>
-                <TableCell>{file.isUpdated && 'yes'}</TableCell>
+                <TableCell>
+                  {file.isUpdated && <Badge>Updated</Badge>}
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>

@@ -1,5 +1,5 @@
-import { prisma } from './db.server'
-import { translateByGemini } from './translate-gemini'
+import { prisma } from '../../../../services/db.server'
+import { translateByGemini } from '../../../../services/translate-gemini'
 
 export const startTranslationJob = async (projectId: string) => {
   const project = await prisma.project.findUniqueOrThrow({
@@ -22,7 +22,12 @@ export const startTranslationJob = async (projectId: string) => {
   })
 
   for (const file of files) {
-    console.log(file.path)
+    if (!file.isUpdated) {
+      console.log(`file is not updated: ${file.path}`)
+      continue
+    }
+
+    console.log(`translation task started: ${file.path}`)
     const task = await prisma.translationTask.create({
       data: {
         jobId: job.id,
@@ -48,12 +53,13 @@ export const startTranslationJob = async (projectId: string) => {
       const updated = await prisma.file.update({
         where: { id: file.id },
         data: {
+          isUpdated: false,
           output: ret.destinationText,
           translatedAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
         },
       })
-      console.log(updated)
+      console.log(`file updated: ${updated.path}`)
 
       await prisma.translationTask.update({
         where: { id: task.id },
