@@ -10,6 +10,17 @@ describe('listRepositoryFiles', () => {
     expect(files._unsafeUnwrap()).toMatchSnapshot()
   })
 
+  // excludes
+  test('should exclude files that match the exclude pattern', async () => {
+    const directory = path.join('test/fixtures/projects/projectA/docs')
+    const files = await listRepositoryFiles(directory, {
+      pattern: '**/*',
+      excludes: ['index.*'],
+    })
+    expect(files.isOk()).toBe(true)
+    expect(files._unsafeUnwrap()).toMatchSnapshot()
+  })
+
   test('should return empty array if the directory does not exist', async () => {
     const directory = path.join('test/fixtures/projects/non-existent')
     const result = await listRepositoryFiles(directory)

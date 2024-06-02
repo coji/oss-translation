@@ -11,7 +11,7 @@ const fileContentImpl = async (
   const content = await fs.readFile(path.join(directory, filename), 'utf-8')
   const md5 = md5sum(content)
 
-  return { filename, content, md5 }
+  return { filename: path.join(directory, filename), content, md5 }
 }
 
 export const getRepositoryFileContent = (
