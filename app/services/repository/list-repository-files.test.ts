@@ -5,8 +5,8 @@ import { listRepositoryFiles } from './list-repository-files'
 test('listRepositoryFiles', async () => {
   const directory = path.join(
     import.meta.dirname,
-    'fixtures/projects/projectA/docs',
+    'test/fixtures/projects/projectA/docs',
   )
   const files = await listRepositoryFiles(directory)
-  expect(files).toEqual(['index.md', 'guide/about.md', 'guide/introduction.md'])
+  expect(files).toMatchSnapshot()
 })
