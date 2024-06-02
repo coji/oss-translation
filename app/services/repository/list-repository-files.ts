@@ -1,4 +1,5 @@
 import fg from 'fast-glob'
+import { okAsync } from 'neverthrow'
 import { getRepositoryFileContent } from './get-repository-file-content'
 import type { RepositoryFile } from './types'
 
@@ -9,7 +10,6 @@ export const listRepositoryFiles = async (directory: string) => {
   })
 
   const files: RepositoryFile[] = []
-
   for (const filename of filenames) {
     const result = await getRepositoryFileContent(directory, filename)
     if (result.isOk()) {
@@ -17,5 +17,5 @@ export const listRepositoryFiles = async (directory: string) => {
     }
   }
 
-  return files
+  return okAsync(files)
 }
