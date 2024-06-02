@@ -41,9 +41,9 @@ export default function Index() {
             <TableHeader>
               <TableRow>
                 <TableCell>ID</TableCell>
-                <TableCell>Description</TableCell>
                 <TableCell>Path</TableCell>
                 <TableCell>Pattern</TableCell>
+                <TableCell>Excludes</TableCell>
                 <TableCell>Created At</TableCell>
               </TableRow>
             </TableHeader>
@@ -57,9 +57,9 @@ export default function Index() {
                   }}
                 >
                   <TableCell>{project.id}</TableCell>
-                  <TableCell>{project.description}</TableCell>
                   <TableCell>{project.path}</TableCell>
                   <TableCell>{project.pattern}</TableCell>
+                  <TableCell>{project.excludes}</TableCell>
                   <TableCell>{project.createdAt.toISOString()}</TableCell>
                 </TableRow>
               ))}
