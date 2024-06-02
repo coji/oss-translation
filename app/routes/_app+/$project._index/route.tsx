@@ -174,6 +174,13 @@ export default function ProjectDetail() {
                     .format('YYYY-MM-DD HH:mm:ss')}
                 </TableCell>
                 <TableCell>
+                  {file.translatedAt &&
+                    dayjs(file.translatedAt)
+                      .utc()
+                      .tz()
+                      .format('YYYY-MM-DD HH:mm:ss')}
+                </TableCell>
+                <TableCell>
                   {file.isUpdated && <Badge>Updated</Badge>}
                 </TableCell>
               </TableRow>
