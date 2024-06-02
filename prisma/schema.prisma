@@ -33,6 +33,8 @@ model File {
   path         String
   content      String
   contentMD5   String    @map("content_md5")
+  title        String?
+  attrs        String?
   isUpdated    Boolean   @default(true)
   output       String?
   translatedAt DateTime? @map("translated_at")

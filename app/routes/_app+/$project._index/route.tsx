@@ -2,6 +2,7 @@ import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node'
 import {
   Form,
   Link,
+  useActionData,
   useLoaderData,
   useNavigate,
   useNavigation,
@@ -31,6 +32,7 @@ import dayjs from '~/libs/dayjs'
 import {
   exportFiles,
   getProjectDetails,
+  rescanFiles,
   startTranslationJob,
 } from './functions.server'
 
@@ -46,23 +48,40 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 
   const intent = formData.get('intent') as string
 
+  if (intent === 'rescan-files') {
+    const updatedFiles = await rescanFiles(projectId)
+    console.log({ updatedFiles: updatedFiles.map((file) => file.filePath) })
+    return {
+      intent,
+      files: updatedFiles,
+    }
+  }
+
   if (intent === 'start-translation-job') {
-    await startTranslationJob(projectId)
+    return {
+      intent,
+      job: await startTranslationJob(projectId),
+    }
   }
 
   if (intent === 'export-files') {
-    await exportFiles(projectId)
+    return {
+      intent,
+      files: await exportFiles(projectId),
+    }
   }
-
-  return {}
 }
 
 export default function ProjectDetail() {
   const { project } = useLoaderData<typeof loader>()
+  const actionData = useActionData<typeof action>()
   const navigation = useNavigation()
   const navigate = useNavigate()
 
   const isSubmitting = navigation.state === 'submitting'
+  const isRescanInProgress =
+    navigation.state === 'submitting' &&
+    navigation.formData?.get('intent') === 'rescan-files'
   const isTranslationInProgress =
     navigation.state === 'submitting' &&
     navigation.formData?.get('intent') === 'start-translation-job'
@@ -92,6 +111,17 @@ export default function ProjectDetail() {
 
         <Form method="POST">
           <HStack>
+            <Button
+              name="intent"
+              value="rescan-files"
+              disabled={isRescanInProgress}
+            >
+              {isRescanInProgress && (
+                <LoaderCircleIcon size="16" className="mr-2 animate-spin" />
+              )}
+              Rescan files
+            </Button>
+
             <Button
               name="intent"
               value="start-translation-job"

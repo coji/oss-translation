@@ -24,8 +24,8 @@ import {
   Textarea,
 } from '~/components/ui'
 import { Stack } from '~/components/ui/stack'
+import { scanProject } from '~/services/content/scan-project'
 import { createFiles, createProject } from './functions/mutations.server'
-import { globProject } from './functions/project-glob.server'
 
 const schema = z.object({
   id: z.string(),
@@ -60,7 +60,8 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   }
 
   const project = await createProject(submission.value)
-  const files = await globProject(project)
+  const files = await scanProject(project)
+
   await createFiles(project, files)
 
   return redirect($path('/'))

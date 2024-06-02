@@ -7,6 +7,7 @@ export const getProjectDetails = async (projectId: string) => {
         select: {
           id: true,
           path: true,
+          contentMD5: true,
           isUpdated: true,
           translatedAt: true,
           updatedAt: true,

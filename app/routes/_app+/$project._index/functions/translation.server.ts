@@ -80,4 +80,6 @@ export const startTranslationJob = async (projectId: string) => {
       })
     }
   }
+
+  return job
 }

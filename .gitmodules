@@ -1,6 +1,9 @@
 [submodule "projects/remix"]
 	path = projects/remix
-	url = https://github.com/coji/remix
+	url = https://github.com/remix-run/remix.git
 [submodule "projects/conform"]
 	path = projects/conform
 	url = git@github.com:coji/conform.git
+[submodule "projects/remix-flat-routes"]
+	path = projects/remix-flat-routes
+	url = https://github.com/kiliman/remix-flat-routes

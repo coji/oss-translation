@@ -3,10 +3,6 @@ import path from 'node:path'
 import { prisma } from '~/services/db.server'
 
 export const exportFiles = async (projectId: string) => {
-  const project = await prisma.project.findUniqueOrThrow({
-    where: { id: projectId },
-  })
-
   const files = await prisma.file.findMany({
     where: { projectId },
     orderBy: { createdAt: 'asc' },
@@ -31,4 +27,6 @@ export const exportFiles = async (projectId: string) => {
       encoding: 'utf-8',
     })
   }
+
+  return files
 }
