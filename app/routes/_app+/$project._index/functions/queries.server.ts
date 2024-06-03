@@ -25,7 +25,7 @@ export const getProjectDetails = async (projectId: string) => {
           updatedAt: true,
           createdAt: true,
         },
-        orderBy: { path: 'asc' },
+        orderBy: { updatedAt: 'desc' },
       },
     },
     where: { id: projectId },

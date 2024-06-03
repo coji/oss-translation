@@ -76,13 +76,14 @@ export const rescanFiles = async (projectId: string) => {
       })
     }
     if (updatedFile.status === 'added') {
-      await prisma.file.updateMany({
+      await prisma.file.create({
         data: {
+          path: updatedFile.filePath,
           content: updatedFile.content,
           contentMD5: updatedFile.contentMD5,
           isUpdated: true,
+          projectId: project.id,
         },
-        where: { path: updatedFile.filePath },
       })
     }
     if (updatedFile.status === 'removed') {
