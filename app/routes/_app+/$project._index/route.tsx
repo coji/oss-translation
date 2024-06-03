@@ -20,6 +20,8 @@ import {
   CardHeader,
   CardTitle,
   HStack,
+  RadioGroup,
+  RadioGroupItem,
   Table,
   TableBody,
   TableCell,
@@ -138,6 +140,16 @@ export default function ProjectDetail() {
               )}
               Export files
             </Button>
+
+            <div className="flex-1" />
+
+            <HStack>
+              <div>Sort by</div>
+              <RadioGroup>
+                <RadioGroupItem value="path">Path</RadioGroupItem>
+                <RadioGroupItem value="content">Content</RadioGroupItem>
+              </RadioGroup>
+            </HStack>
           </HStack>
         </Form>
       </CardHeader>
@@ -147,6 +159,8 @@ export default function ProjectDetail() {
           <TableHeader>
             <TableRow>
               <TableHead>Path</TableHead>
+              <TableHead>Content</TableHead>
+              <TableHead>Translated</TableHead>
               <TableHead>UpdatedAt</TableHead>
               <TableHead>TranslatedAt</TableHead>
               <TableHead>isUpdated</TableHead>
@@ -167,6 +181,16 @@ export default function ProjectDetail() {
                 }}
               >
                 <TableCell>{file.path}</TableCell>
+                <TableCell>
+                  <div className="mr-2 text-right">
+                    {file.content.length.toLocaleString()}
+                  </div>
+                </TableCell>
+                <TableCell>
+                  <div className="mr-2 text-right">
+                    {file.output?.length.toLocaleString()}
+                  </div>
+                </TableCell>
                 <TableCell>
                   {dayjs(file.updatedAt)
                     .utc()

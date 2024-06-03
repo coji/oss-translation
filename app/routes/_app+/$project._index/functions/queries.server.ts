@@ -7,7 +7,9 @@ export const getProjectDetails = async (projectId: string) => {
         select: {
           id: true,
           path: true,
+          content: true,
           contentMD5: true,
+          output: true,
           isUpdated: true,
           translatedAt: true,
           updatedAt: true,
@@ -17,6 +19,12 @@ export const getProjectDetails = async (projectId: string) => {
       },
     },
     where: { id: projectId },
-    orderBy: {},
+  })
+}
+
+export const listProjectFiles = async (projectId: string) => {
+  return await prisma.file.findMany({
+    where: { projectId },
+    orderBy: { path: 'asc' },
   })
 }
