@@ -1,4 +1,5 @@
 import { okAsync } from 'neverthrow'
+import { prisma } from '~/services/db.server'
 import { listRepositoryFiles } from '~/services/repository/list-repository-files'
 import { getProjectPath } from '~/services/repository/utils'
 import { getProject, listProjectFiles } from './queries.server'
@@ -58,6 +59,35 @@ export const rescanFiles = async (projectId: string) => {
         content: projectFile.content,
         contentMD5: projectFile.contentMD5,
         status: 'removed',
+      })
+    }
+  }
+
+  // write back to database
+  for (const updatedFile of updatedFiles) {
+    if (updatedFile.status === 'updated') {
+      await prisma.file.updateMany({
+        data: {
+          content: updatedFile.content,
+          contentMD5: updatedFile.contentMD5,
+          isUpdated: true,
+        },
+        where: { path: updatedFile.filePath },
+      })
+    }
+    if (updatedFile.status === 'added') {
+      await prisma.file.updateMany({
+        data: {
+          content: updatedFile.content,
+          contentMD5: updatedFile.contentMD5,
+          isUpdated: true,
+        },
+        where: { path: updatedFile.filePath },
+      })
+    }
+    if (updatedFile.status === 'removed') {
+      await prisma.file.deleteMany({
+        where: { path: updatedFile.filePath },
       })
     }
   }

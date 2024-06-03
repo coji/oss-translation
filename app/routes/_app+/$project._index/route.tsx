@@ -243,6 +243,7 @@ export default function ProjectDetail() {
       </CardHeader>
 
       <CardContent>
+        {project.files.length}件のファイル
         <Table>
           <TableHeader>
             <TableRow>
