@@ -67,24 +67,29 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
         .filter((file) => file.status === 'removed')
         .map((file) => file.filePath),
     })
+
     return {
-      intent,
-      files: updatedFiles.value,
+      intent: 'rescan-project',
+      rescan_result: updatedFiles.value,
     }
   }
 
   if (intent === 'start-translation-job') {
     return {
-      intent,
-      job: await startTranslationJob(projectId),
+      intent: 'start-translation-job',
+      translation_result: await startTranslationJob(projectId),
     }
   }
 
   if (intent === 'export-files') {
     return {
-      intent,
-      files: await exportFiles(projectId),
+      intent: 'export-files',
+      export_result: await exportFiles(projectId),
     }
+  }
+
+  return {
+    intent: 'unknown',
   }
 }
 
@@ -166,6 +171,75 @@ export default function ProjectDetail() {
             </HStack>
           </HStack>
         </Form>
+
+        <div>
+          {actionData?.intent === 'rescan-project' &&
+            actionData.rescan_result && (
+              <div>
+                <div>Rescan completed</div>
+                <div>
+                  <div>
+                    <div>Updated</div>
+                    <ul>
+                      {actionData.rescan_result
+                        .filter((file) => file.status === 'updated')
+                        .map((file) => (
+                          <li className="ml-4" key={file.filePath}>
+                            {file.filePath}
+                          </li>
+                        ))}
+                    </ul>
+                  </div>
+                  <div>
+                    <div>Added</div>
+                    <ul>
+                      {actionData.rescan_result
+                        .filter((file) => file.status === 'added')
+                        .map((file) => (
+                          <li className="ml-4" key={file.filePath}>
+                            {file.filePath}
+                          </li>
+                        ))}
+                    </ul>
+                  </div>
+                  <div>
+                    <div>Removed</div>
+                    <ul>
+                      {actionData.rescan_result
+                        .filter((file) => file.status === 'removed')
+                        .map((file) => (
+                          <li className="ml-4" key={file.filePath}>
+                            {file.filePath}
+                          </li>
+                        ))}
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            )}
+
+          {actionData?.intent === 'start-translation-job' &&
+            actionData.translation_result && (
+              <div>
+                <div>Translation job started</div>
+                <div>Job ID: {actionData.translation_result.id}</div>
+              </div>
+            )}
+
+          {actionData?.intent === 'export-files' &&
+            actionData.export_result && (
+              <div>
+                <div>Export completed</div>
+                <div>
+                  <ul>
+                    {actionData.export_result.map((file) => (
+                      <li key={file.id}>{file.path}</li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            )}
+        </div>
       </CardHeader>
 
       <CardContent>
