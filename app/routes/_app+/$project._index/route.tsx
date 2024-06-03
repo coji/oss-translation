@@ -50,12 +50,26 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 
   const intent = formData.get('intent') as string
 
-  if (intent === 'rescan-files') {
+  if (intent === 'rescan-project') {
     const updatedFiles = await rescanFiles(projectId)
-    console.log({ updatedFiles: updatedFiles.map((file) => file.filePath) })
+    if (updatedFiles.isErr()) {
+      throw new Error(updatedFiles.error)
+    }
+
+    console.log({
+      updated: updatedFiles.value
+        .filter((file) => file.status === 'updated')
+        .map((file) => file.filePath),
+      added: updatedFiles.value
+        .filter((file) => file.status === 'added')
+        .map((file) => file.filePath),
+      removed: updatedFiles.value
+        .filter((file) => file.status === 'removed')
+        .map((file) => file.filePath),
+    })
     return {
       intent,
-      files: updatedFiles,
+      files: updatedFiles.value,
     }
   }
 
@@ -83,7 +97,7 @@ export default function ProjectDetail() {
   const isSubmitting = navigation.state === 'submitting'
   const isRescanInProgress =
     navigation.state === 'submitting' &&
-    navigation.formData?.get('intent') === 'rescan-files'
+    navigation.formData?.get('intent') === 'rescan-project'
   const isTranslationInProgress =
     navigation.state === 'submitting' &&
     navigation.formData?.get('intent') === 'start-translation-job'
@@ -115,7 +129,7 @@ export default function ProjectDetail() {
           <HStack>
             <Button
               name="intent"
-              value="rescan-files"
+              value="rescan-project"
               disabled={isRescanInProgress}
             >
               {isRescanInProgress && (
