@@ -26,9 +26,16 @@ import {
 import { updateFileOutput } from './mutations.server'
 import { getFile } from './queries.server'
 
-const schema = z.object({
-  output: z.string(),
-})
+const schema = z.discriminatedUnion('intent', [
+  z.object({
+    intent: z.literal('save'),
+    output: z.string(),
+  }),
+  z.object({
+    intent: z.literal('translate'),
+    prompt: z.string(),
+  }),
+])
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {
   const { project: projectId, file: fileId } = zx.parseParams(params, {
@@ -50,7 +57,9 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
     return { lastResult: submission.reply() }
   }
 
-  await updateFileOutput(projectId, fileId, submission.value.output)
+  if (submission.value.intent === 'save') {
+    await updateFileOutput(projectId, fileId, submission.value.output)
+  }
 
   return {
     lastResult: submission.reply({ resetForm: true }),
@@ -92,8 +101,13 @@ export default function ProjectFileDetails() {
 
         <CardContent className="grid grid-cols-2 gap-2">
           <Stack>
-            <Label>Original</Label>
-            <Textarea readOnly rows={20} defaultValue={file.content} />
+            <Label htmlFor="original">Original</Label>
+            <Textarea
+              id="original"
+              readOnly
+              rows={20}
+              defaultValue={file.content}
+            />
           </Stack>
 
           <Stack>
@@ -113,7 +127,13 @@ export default function ProjectFileDetails() {
                 Reset
               </Button>
 
-              <Button type="submit" disabled={!form.dirty} className="w-full">
+              <Button
+                type="submit"
+                name="intent"
+                value="save"
+                disabled={!form.dirty}
+                className="w-full"
+              >
                 Save
               </Button>
             </HStack>
