@@ -41,7 +41,6 @@ export const startTranslationJob = async (projectId: string) => {
     })
 
     const ret = await translateByGemini({
-      apiKey: process.env.GEMINI_API_KEY,
       model: 'gemini-1.5-flash-latest',
       systemPrompt: project.prompt,
       //'Translate the following text to Japanese. Markdowns should be left intact:',

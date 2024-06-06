@@ -17,21 +17,19 @@ export const Models: Record<
 } as const
 
 export const callGemini = async ({
-  apiKey,
   system,
   message,
   model,
   maxTokens,
   temperature,
 }: {
-  apiKey: string
   system: string
   message: string
   model: GeminiModels
   maxTokens: number
   temperature?: number
 }) => {
-  const genAI = new GoogleGenerativeAI(apiKey)
+  const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY)
   const genModel = genAI.getGenerativeModel({ model })
   const result = await genModel.generateContent({
     generationConfig: {
