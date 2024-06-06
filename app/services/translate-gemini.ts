@@ -13,22 +13,20 @@ interface TranslateError {
   error: string
 }
 
-type GeminiModel = Parameters<typeof callGemini>[0]['model']
+const MODEL = 'gemini-1.5-flash-latest' as const
 
 interface TranslateProps {
   systemPrompt: string
-  model: GeminiModel
   source: string
 }
 export const translateByGemini = async ({
   systemPrompt,
-  model,
   source,
 }: TranslateProps): Promise<TranslateSuccess | TranslateError> => {
   try {
     const response = await callGemini({
       system: systemPrompt,
-      model,
+      model: MODEL,
       maxTokens: 8192,
       message: source,
     })
@@ -38,7 +36,7 @@ export const translateByGemini = async ({
       destinationText: response.content,
       inputTokens: response.usage?.promptTokenCount,
       outputTokens: response.usage?.candidatesTokenCount,
-      cost: response.usage && calcTokenCostUSD(model, response.usage),
+      cost: response.usage && calcTokenCostUSD(MODEL, response.usage),
     }
   } catch (e) {
     let errorMessage = ''
