@@ -19,6 +19,7 @@ model Project {
   prompt          String
   path            String
   pattern         String
+  excludes        String           @default("[]")
   updatedAt       DateTime         @default(now()) @updatedAt
   createdAt       DateTime         @default(now())
   translationJobs TranslationJob[]

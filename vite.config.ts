@@ -16,4 +16,7 @@ export default defineConfig({
     remixRoutes(),
     tsconfigPaths(),
   ],
+  test: {
+    exclude: ['projects', 'node_modules'],
+  },
 })

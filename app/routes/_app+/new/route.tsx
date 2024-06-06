@@ -7,8 +7,6 @@ import {
 import { parseWithZod } from '@conform-to/zod'
 import type { ActionFunctionArgs } from '@remix-run/node'
 import { Form, Link, redirect, useActionData } from '@remix-run/react'
-import fs from 'node:fs/promises'
-import path from 'node:path'
 import { $path } from 'remix-routes'
 import { z } from 'zod'
 import {
@@ -24,13 +22,15 @@ import {
   Textarea,
 } from '~/components/ui'
 import { Stack } from '~/components/ui/stack'
-import { scanProject } from '~/services/content/scan-project'
+import { listRepositoryFiles } from '~/services/repository/list-repository-files'
+import { getProjectPath } from '~/services/repository/utils'
 import { createFiles, createProject } from './functions/mutations.server'
 
 const schema = z.object({
   id: z.string(),
   path: z.string(),
   pattern: z.string(),
+  excludes: z.string().optional(),
   description: z.string().optional(),
   prompt: z.string(),
 })
@@ -41,35 +41,23 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     return { lastResult: submission.reply() }
   }
 
-  const stat = await fs
-    .stat(path.join('./projects', submission.value.id))
-    .catch(() => null)
-  if (!stat) {
-    return {
-      lastResult: submission.reply({
-        fieldErrors: { path: ['Path does not exist'] },
-      }),
-    }
-  }
-  if (!stat.isDirectory()) {
-    return {
-      lastResult: submission.reply({
-        fieldErrors: { path: ['Path must be a directory'] },
-      }),
-    }
-  }
-
   const project = await createProject(submission.value)
-  const files = await scanProject(project)
+  const files = await listRepositoryFiles(getProjectPath(project), {
+    pattern: project.pattern,
+    excludes: project.excludes,
+  })
+  if (files.isErr()) {
+    throw files.error
+  }
 
-  await createFiles(project, files)
+  await createFiles(project.id, files.value)
 
   return redirect($path('/'))
 }
 
 export default function NewProjectPage() {
   const actionData = useActionData<typeof action>()
-  const [form, { id, path, pattern, description, prompt }] = useForm({
+  const [form, { id, path, pattern, excludes, description, prompt }] = useForm({
     lastResult: actionData?.lastResult,
     defaultValue: {
       prompt:
@@ -95,19 +83,28 @@ export default function NewProjectPage() {
               </div>
             </div>
             <div>
-              <Label>Document Path</Label>
+              <Label htmlFor={path.id}>Document Path</Label>
               <Input {...getInputProps(path, { type: 'text' })} />
               <div id={path.errorId} className="text-sm text-destructive">
                 {path.errors}
               </div>
             </div>
             <div>
-              <Label>Glob Pattern</Label>
+              <Label htmlFor={pattern.id}>Glob Pattern</Label>
               <Input {...getInputProps(pattern, { type: 'text' })} />
               <div id={pattern.errorId} className="text-sm text-destructive">
                 {pattern.errors}
               </div>
             </div>
+
+            <div>
+              <Label htmlFor={excludes.id}>Excludes</Label>
+              <Input {...getInputProps(excludes, { type: 'text' })} />
+              <div id={excludes.errorId} className="text-sm text-destructive">
+                {excludes.errors}
+              </div>
+            </div>
+
             <div>
               <Label htmlFor={description.id}>Description</Label>
               <Textarea {...getTextareaProps(description)} />

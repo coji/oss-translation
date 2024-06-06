@@ -23,7 +23,6 @@ export const startTranslationJob = async (projectId: string) => {
 
   for (const file of files) {
     if (!file.isUpdated) {
-      console.log(`file is not updated: ${file.path}`)
       continue
     }
 
@@ -80,6 +79,8 @@ export const startTranslationJob = async (projectId: string) => {
       })
     }
   }
+
+  console.log('translation job finished: ', job.id)
 
   return job
 }
