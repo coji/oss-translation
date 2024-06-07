@@ -1,5 +1,5 @@
 import type { LoaderFunctionArgs } from '@remix-run/node'
-import { Link, NavLink, Outlet, useLoaderData } from '@remix-run/react'
+import { Link, Outlet, useLoaderData } from '@remix-run/react'
 import { ArrowLeftIcon } from 'lucide-react'
 import { z } from 'zod'
 import { zx } from 'zodix'
@@ -7,10 +7,10 @@ import {
   Button,
   Card,
   CardContent,
-  CardDescription,
   CardHeader,
   CardTitle,
-  HStack,
+  NavTab,
+  NavTabs,
 } from '~/components/ui'
 import { getFile, getProject } from './queries.server'
 
@@ -44,24 +44,14 @@ export default function ProjectFileDetails() {
           {file.path}
         </CardTitle>
 
-        <CardDescription>{file.contentMD5}</CardDescription>
-
-        <HStack>
-          <NavLink
-            to="."
-            end
-            className="hover:underline aria-[current]:font-bold"
-          >
+        <NavTabs>
+          <NavTab to="." end>
             Edit
-          </NavLink>
-          <NavLink
-            to="./translate"
-            end
-            className="hover:underline aria-[current]:font-bold"
-          >
+          </NavTab>
+          <NavTab to="./translate" end>
             Translate
-          </NavLink>
-        </HStack>
+          </NavTab>
+        </NavTabs>
       </CardHeader>
 
       <CardContent>
