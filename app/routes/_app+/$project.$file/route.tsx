@@ -4,6 +4,7 @@ import { ArrowLeftIcon } from 'lucide-react'
 import { z } from 'zod'
 import { zx } from 'zodix'
 import {
+  Badge,
   Button,
   Card,
   CardContent,
@@ -41,7 +42,7 @@ export default function ProjectFileDetails() {
               <ArrowLeftIcon size="16" />
             </Link>
           </Button>
-          {file.path}
+          {file.path} <Badge variant="outline">File</Badge>
         </CardTitle>
 
         <NavTabs>

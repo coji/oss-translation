@@ -126,8 +126,7 @@ export default function ProjectDetail() {
               <ArrowLeftIcon size="16" />
             </Link>
           </Button>
-
-          {project.id}
+          {project.id} <Badge variant="outline">Project</Badge>
         </CardTitle>
         <CardDescription>{project.description}</CardDescription>
 

@@ -4,6 +4,7 @@ import { flatRoutes } from 'remix-flat-routes'
 import { remixRoutes } from 'remix-routes/vite'
 import { defineConfig } from 'vite'
 import tsconfigPaths from 'vite-tsconfig-paths'
+import { configDefaults } from 'vitest/config'
 
 installGlobals({ nativeFetch: true })
 
@@ -20,6 +21,6 @@ export default defineConfig({
     tsconfigPaths(),
   ],
   test: {
-    exclude: ['projects', 'node_modules'],
+    exclude: [...configDefaults.exclude, 'projects'],
   },
 })
