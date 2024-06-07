@@ -8,7 +8,7 @@ export const updateFileOutput = async (
   return await prisma.file.update({
     data: {
       output,
-      isUpdated: true,
+      isUpdated: false,
     },
     where: {
       id: fileId,

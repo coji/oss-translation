@@ -20,6 +20,7 @@ import {
   CardHeader,
   CardTitle,
   HStack,
+  Label,
   RadioGroup,
   RadioGroupItem,
   Table,
@@ -165,8 +166,14 @@ export default function ProjectDetail() {
             <HStack>
               <div>Sort by</div>
               <RadioGroup>
-                <RadioGroupItem value="path">Path</RadioGroupItem>
-                <RadioGroupItem value="content">Content</RadioGroupItem>
+                <HStack>
+                  <RadioGroupItem value="path" id="sort_path" />
+                  <Label htmlFor="sort_path">Path</Label>
+                </HStack>
+                <HStack>
+                  <RadioGroupItem value="content" id="sort_content" />
+                  <Label htmlFor="sort_content">Content</Label>
+                </HStack>
               </RadioGroup>
             </HStack>
           </HStack>

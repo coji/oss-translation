@@ -9,6 +9,7 @@ import {
   useOutletContext,
 } from '@remix-run/react'
 import { LoaderCircleIcon } from 'lucide-react'
+import { jsonWithSuccess } from 'remix-toast'
 import { z } from 'zod'
 import { zx } from 'zodix'
 import { Button, Label, Stack, Textarea } from '~/components/ui'
@@ -49,9 +50,15 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 
   await updateFileOutput(projectId, fileId, ret.destinationText)
 
-  return {
-    lastResult: submission.reply({ resetForm: true }),
-  }
+  return jsonWithSuccess(
+    {
+      lastResult: submission.reply({ resetForm: true }),
+    },
+    {
+      message: 'Translation successful',
+      description: `input: ${ret.inputTokens?.toLocaleString()}, output: ${ret.outputTokens?.toLocaleString()}, cost: ${ret.cost}円`,
+    },
+  )
 }
 
 export default function ProjectFileDetails() {
