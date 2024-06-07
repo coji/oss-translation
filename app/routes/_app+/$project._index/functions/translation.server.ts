@@ -1,5 +1,5 @@
-import { prisma } from '../../../../services/db.server'
-import { translateByGemini } from '../../../../services/translate-gemini'
+import { prisma } from '~/services/db.server'
+import { translateByGemini } from '~/services/translate-gemini'
 
 export const startTranslationJob = async (projectId: string) => {
   const project = await prisma.project.findUniqueOrThrow({

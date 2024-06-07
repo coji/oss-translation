@@ -8,6 +8,9 @@ import tsconfigPaths from 'vite-tsconfig-paths'
 installGlobals({ nativeFetch: true })
 
 export default defineConfig({
+  optimizeDeps: {
+    exclude: ['projects'],
+  },
   plugins: [
     remix({
       routes: (defineRoutes) => flatRoutes('routes', defineRoutes),
