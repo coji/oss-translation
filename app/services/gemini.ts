@@ -73,3 +73,10 @@ export const calcTokenCostUSD = (model: GeminiModels, usage: UsageMetadata) => {
     })
     .exhaustive()
 }
+
+export const countTokens = async (text: string, model: string) => {
+  const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY)
+  const genModel = genAI.getGenerativeModel({ model })
+  const result = await genModel.countTokens(text)
+  return result.totalTokens
+}

@@ -1,4 +1,5 @@
-import { calcTokenCostUSD, callGemini } from './gemini'
+import { splitMarkdownByHeaders } from '~/libs/split-markdown'
+import { calcTokenCostUSD, callGemini, countTokens } from './gemini'
 
 interface TranslateSuccess {
   type: 'success'
@@ -14,29 +15,48 @@ interface TranslateError {
 }
 
 const MODEL = 'gemini-1.5-flash-latest' as const
+const MAX_TOKENS = 8192 as const
 
 interface TranslateProps {
   systemPrompt: string
   source: string
 }
+
 export const translateByGemini = async ({
   systemPrompt,
   source,
 }: TranslateProps): Promise<TranslateSuccess | TranslateError> => {
+  const tokens = await countTokens(source, MODEL)
+
+  const sections =
+    tokens > MAX_TOKENS ? splitMarkdownByHeaders(source) : [source]
+
+  let finalDestinationText = ''
+  let totalInputTokens = 0
+  let totalOutputTokens = 0
+  let totalCost = 0
+
   try {
-    const response = await callGemini({
-      system: systemPrompt,
-      model: MODEL,
-      maxTokens: 8192,
-      message: source,
-    })
+    for (const section of sections) {
+      const response = await callGemini({
+        system: systemPrompt,
+        model: MODEL,
+        maxTokens: MAX_TOKENS,
+        message: section,
+      })
+
+      finalDestinationText += `${response.content}\n`
+      totalInputTokens += response.usage?.promptTokenCount || 0
+      totalOutputTokens += response.usage?.candidatesTokenCount || 0
+      totalCost += response.usage ? calcTokenCostUSD(MODEL, response.usage) : 0
+    }
 
     return {
       type: 'success',
-      destinationText: response.content,
-      inputTokens: response.usage?.promptTokenCount,
-      outputTokens: response.usage?.candidatesTokenCount,
-      cost: response.usage && calcTokenCostUSD(MODEL, response.usage),
+      destinationText: finalDestinationText,
+      inputTokens: totalInputTokens,
+      outputTokens: totalOutputTokens,
+      cost: totalCost,
     }
   } catch (e) {
     let errorMessage = ''

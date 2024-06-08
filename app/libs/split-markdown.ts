@@ -10,7 +10,6 @@ const processor = remark()
 
 export const splitMarkdownByHeaders = (markdownText: string): string[] => {
   const ast = processor.parse(markdownText)
-  console.log(ast)
 
   const chunks: string[] = []
   let currentChunk = ''
