@@ -52,6 +52,9 @@ export default function ProjectFileDetails() {
           <NavTab to="./translate" end>
             Translate
           </NavTab>
+          <NavTab to="./chunks" end>
+            Chunks
+          </NavTab>
         </NavTabs>
       </CardHeader>
 
