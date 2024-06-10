@@ -1,6 +1,7 @@
-import type { LoaderFunctionArgs } from '@remix-run/node'
+import type { LoaderFunctionArgs, MetaFunction } from '@remix-run/node'
 import { Link, Outlet, useLoaderData } from '@remix-run/react'
 import { ArrowLeftIcon } from 'lucide-react'
+import { basename } from 'node:path'
 import { z } from 'zod'
 import { zx } from 'zodix'
 import {
@@ -15,6 +16,10 @@ import {
 } from '~/components/ui'
 import { getFile, getProject } from './queries.server'
 
+export const meta: MetaFunction<typeof loader> = ({ data }) => [
+  { title: `${data?.filename} - ${data?.project.id}` },
+]
+
 export const loader = async ({ params }: LoaderFunctionArgs) => {
   const { project: projectId, file: fileId } = zx.parseParams(params, {
     project: z.string(),
@@ -22,7 +27,7 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
   })
   const project = await getProject(projectId)
   const file = await getFile(projectId, fileId)
-  return { project, file }
+  return { project, file, filename: basename(file.path) }
 }
 
 export default function ProjectFileDetails() {

@@ -1,4 +1,8 @@
-import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node'
+import type {
+  ActionFunctionArgs,
+  LoaderFunctionArgs,
+  MetaFunction,
+} from '@remix-run/node'
 import {
   Form,
   Link,
@@ -38,6 +42,10 @@ import {
   rescanFiles,
   startTranslationJob,
 } from './functions.server'
+
+export const meta: MetaFunction<typeof loader> = ({ data }) => [
+  { title: `${data?.project.id}` },
+]
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {
   const { project: projectId } = zx.parseParams(params, { project: z.string() })

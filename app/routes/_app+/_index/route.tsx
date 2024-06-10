@@ -1,4 +1,4 @@
-import type { LoaderFunctionArgs } from '@remix-run/node'
+import type { LoaderFunctionArgs, MetaFunction } from '@remix-run/node'
 import { Link, useLoaderData, useNavigate } from '@remix-run/react'
 import { $path } from 'remix-routes'
 import {
@@ -16,6 +16,8 @@ import {
   TableRow,
 } from '~/components/ui'
 import { listProjects } from './queries.server'
+
+export const meta: MetaFunction = () => [{ title: 'Projects' }]
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const projects = await listProjects()
