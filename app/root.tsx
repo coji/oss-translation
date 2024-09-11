@@ -5,6 +5,7 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
+  unstable_data,
   useLoaderData,
 } from '@remix-run/react'
 import { useEffect } from 'react'
@@ -16,13 +17,9 @@ import globalStyles from './styles/globals.css?url'
 
 export const links = () => [{ rel: 'stylesheet', href: globalStyles }]
 
-export const loader = async ({ request, response }: LoaderFunctionArgs) => {
+export const loader = async ({ request }: LoaderFunctionArgs) => {
   const { toast, headers } = await getToast(request)
-  const toastCookie = headers.get('Set-Cookie')
-  if (response && toastCookie) {
-    response.headers.set('Set-Cookie', toastCookie)
-  }
-  return { toastData: toast }
+  return unstable_data({ toastData: toast }, { headers })
 }
 
 export function Layout({ children }: { children: React.ReactNode }) {
@@ -62,7 +59,7 @@ export default function App() {
 
   return (
     <>
-      <Toaster />
+      <Toaster closeButton richColors />
       <Outlet />
     </>
   )
