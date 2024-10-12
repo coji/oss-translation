@@ -5,7 +5,7 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
-  unstable_data,
+  data,
   useLoaderData,
 } from '@remix-run/react'
 import { useEffect } from 'react'
@@ -19,7 +19,7 @@ export const links = () => [{ rel: 'stylesheet', href: globalStyles }]
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const { toast, headers } = await getToast(request)
-  return unstable_data({ toastData: toast }, { headers })
+  return data({ toastData: toast }, { headers })
 }
 
 export function Layout({ children }: { children: React.ReactNode }) {

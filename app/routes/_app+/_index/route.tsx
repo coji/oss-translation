@@ -62,7 +62,7 @@ export default function Index() {
                   <TableCell>{project.path}</TableCell>
                   <TableCell>{project.pattern}</TableCell>
                   <TableCell>{project.excludes}</TableCell>
-                  <TableCell>{project.createdAt.toISOString()}</TableCell>
+                  <TableCell>{project.createdAt.toString()}</TableCell>
                 </TableRow>
               ))}
               {projects.length === 0 && (
