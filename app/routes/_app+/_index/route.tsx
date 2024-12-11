@@ -1,6 +1,6 @@
-import type { LoaderFunctionArgs, MetaFunction } from 'react-router';
-import { Link, useLoaderData, useNavigate } from 'react-router';
-import { $path } from 'remix-routes'
+import type { LoaderFunctionArgs, MetaFunction } from 'react-router'
+import { Link, useLoaderData, useNavigate } from 'react-router'
+import { $path } from 'safe-routes'
 import {
   Button,
   Card,

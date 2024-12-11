@@ -7,7 +7,7 @@ import {
 import { parseWithZod } from '@conform-to/zod'
 import type { ActionFunctionArgs } from 'react-router'
 import { Form, Link, redirect, useActionData } from 'react-router'
-import { $path } from 'remix-routes'
+import { $path } from 'safe-routes'
 import { z } from 'zod'
 import {
   Button,
