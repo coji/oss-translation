@@ -1,16 +1,5 @@
-import type {
-  ActionFunctionArgs,
-  LoaderFunctionArgs,
-  MetaFunction,
-} from '@remix-run/node'
-import {
-  Form,
-  Link,
-  useActionData,
-  useLoaderData,
-  useNavigate,
-  useNavigation,
-} from '@remix-run/react'
+import type { ActionFunctionArgs, LoaderFunctionArgs, MetaFunction } from 'react-router';
+import { Form, Link, useActionData, useLoaderData, useNavigate, useNavigation } from 'react-router';
 import { ArrowLeftIcon, LoaderCircleIcon } from 'lucide-react'
 import { $path } from 'remix-routes'
 import { z } from 'zod'

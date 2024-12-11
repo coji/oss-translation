@@ -1,15 +1,16 @@
 import { getFormProps, getTextareaProps, useForm } from '@conform-to/react'
 import { parseWithZod } from '@conform-to/zod'
 import type { File, Project } from '@prisma/client'
-import type { ActionFunctionArgs } from '@remix-run/node'
+import { LoaderCircleIcon } from 'lucide-react'
+import type { ActionFunctionArgs } from 'react-router'
 import {
+  data,
   Form,
   useActionData,
   useNavigation,
   useOutletContext,
-} from '@remix-run/react'
-import { LoaderCircleIcon } from 'lucide-react'
-import { jsonWithSuccess } from 'remix-toast'
+} from 'react-router'
+import { dataWithSuccess } from 'remix-toast'
 import { z } from 'zod'
 import { zx } from 'zodix'
 import { Button, Label, Stack, Textarea } from '~/components/ui'
@@ -29,7 +30,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 
   const submission = parseWithZod(await request.formData(), { schema })
   if (submission.status !== 'success') {
-    return { lastResult: submission.reply() }
+    return data({ lastResult: submission.reply() })
   }
 
   const file = await getFile(projectId, fileId)
@@ -50,7 +51,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 
   await updateFileOutput(projectId, fileId, ret.destinationText)
 
-  return jsonWithSuccess(
+  return dataWithSuccess(
     {
       lastResult: submission.reply({ resetForm: true }),
     },

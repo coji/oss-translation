@@ -1,5 +1,5 @@
-import type { LoaderFunctionArgs, MetaFunction } from '@remix-run/node'
-import { Link, Outlet, useLoaderData } from '@remix-run/react'
+import type { LoaderFunctionArgs, MetaFunction } from 'react-router';
+import { Link, Outlet, useLoaderData } from 'react-router';
 import { ArrowLeftIcon } from 'lucide-react'
 import { basename } from 'node:path'
 import { z } from 'zod'

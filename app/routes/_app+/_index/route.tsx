@@ -1,5 +1,5 @@
-import type { LoaderFunctionArgs, MetaFunction } from '@remix-run/node'
-import { Link, useLoaderData, useNavigate } from '@remix-run/react'
+import type { LoaderFunctionArgs, MetaFunction } from 'react-router';
+import { Link, useLoaderData, useNavigate } from 'react-router';
 import { $path } from 'remix-routes'
 import {
   Button,

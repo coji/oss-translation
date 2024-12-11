@@ -1,13 +1,5 @@
-import type { LoaderFunctionArgs } from '@remix-run/node'
-import {
-  Links,
-  Meta,
-  Outlet,
-  Scripts,
-  ScrollRestoration,
-  data,
-  useLoaderData,
-} from '@remix-run/react'
+import type { LoaderFunctionArgs } from 'react-router';
+import { Links, Meta, Outlet, Scripts, ScrollRestoration, data, useLoaderData } from 'react-router';
 import { useEffect } from 'react'
 import { getToast } from 'remix-toast'
 import { toast } from 'sonner'

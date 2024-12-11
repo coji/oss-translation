@@ -5,8 +5,8 @@ import {
   useForm,
 } from '@conform-to/react'
 import { parseWithZod } from '@conform-to/zod'
-import type { ActionFunctionArgs } from '@remix-run/node'
-import { Form, Link, redirect, useActionData } from '@remix-run/react'
+import type { ActionFunctionArgs } from 'react-router'
+import { Form, Link, redirect, useActionData } from 'react-router'
 import { $path } from 'remix-routes'
 import { z } from 'zod'
 import {
@@ -52,7 +52,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
   await createFiles(project.id, files.value)
 
-  return redirect($path('/'))
+  throw redirect($path('/'))
 }
 
 export default function NewProjectPage() {
