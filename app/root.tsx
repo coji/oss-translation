@@ -1,6 +1,14 @@
-import type { LoaderFunctionArgs } from 'react-router';
-import { Links, Meta, Outlet, Scripts, ScrollRestoration, data, useLoaderData } from 'react-router';
 import { useEffect } from 'react'
+import type { LoaderFunctionArgs } from 'react-router'
+import {
+  Links,
+  Meta,
+  Outlet,
+  Scripts,
+  ScrollRestoration,
+  data,
+  useLoaderData,
+} from 'react-router'
 import { getToast } from 'remix-toast'
 import { toast } from 'sonner'
 import { match } from 'ts-pattern'

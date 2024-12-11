@@ -1,7 +1,7 @@
-import type { MetaFunction } from 'react-router';
-import { Link, Outlet } from 'react-router';
+import { Link, Outlet } from 'react-router'
+import type { Route } from './+types/_layout'
 
-export const meta: MetaFunction = () => {
+export const meta: Route.MetaFunction = () => {
   return [
     { title: 'New Remix App' },
     { name: 'description', content: 'Welcome to Remix!' },

@@ -5,8 +5,7 @@ import {
   useForm,
 } from '@conform-to/react'
 import { parseWithZod } from '@conform-to/zod'
-import type { ActionFunctionArgs } from 'react-router'
-import { Form, Link, redirect, useActionData } from 'react-router'
+import { Form, Link, redirect } from 'react-router'
 import { $path } from 'safe-routes'
 import { z } from 'zod'
 import {
@@ -24,6 +23,7 @@ import {
 import { Stack } from '~/components/ui/stack'
 import { listRepositoryFiles } from '~/services/repository/list-repository-files'
 import { getProjectPath } from '~/services/repository/utils'
+import type { Route } from './+types/route'
 import { createFiles, createProject } from './functions/mutations.server'
 
 const schema = z.object({
@@ -35,7 +35,7 @@ const schema = z.object({
   prompt: z.string(),
 })
 
-export const action = async ({ request }: ActionFunctionArgs) => {
+export const action = async ({ request }: Route.ActionArgs) => {
   const submission = parseWithZod(await request.formData(), { schema })
   if (submission.status !== 'success') {
     return { lastResult: submission.reply() }
@@ -55,8 +55,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   throw redirect($path('/'))
 }
 
-export default function NewProjectPage() {
-  const actionData = useActionData<typeof action>()
+export default function NewProjectPage({ actionData }: Route.ComponentProps) {
   const [form, { id, path, pattern, excludes, description, prompt }] = useForm({
     lastResult: actionData?.lastResult,
     defaultValue: {

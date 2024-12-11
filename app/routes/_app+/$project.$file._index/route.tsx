@@ -1,18 +1,18 @@
 import { getFormProps, getTextareaProps, useForm } from '@conform-to/react'
 import { parseWithZod } from '@conform-to/zod'
 import type { File, Project } from '@prisma/client'
-import type { ActionFunctionArgs } from 'react-router';
-import { Form, useActionData, useNavigation, useOutletContext } from 'react-router';
+import { Form, useNavigation, useOutletContext } from 'react-router'
 import { z } from 'zod'
 import { zx } from 'zodix'
 import { Button, HStack, Label, Stack, Textarea } from '~/components/ui'
+import type { Route } from './+types/route'
 import { updateFileOutput } from './mutations.server'
 
 const schema = z.object({
   output: z.string(),
 })
 
-export const action = async ({ request, params }: ActionFunctionArgs) => {
+export const action = async ({ request, params }: Route.ActionArgs) => {
   const { project: projectId, file: fileId } = zx.parseParams(params, {
     project: z.string(),
     file: zx.NumAsString,
@@ -30,9 +30,10 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
   }
 }
 
-export default function ProjectFileDetails() {
+export default function ProjectFileDetails({
+  actionData,
+}: Route.ComponentProps) {
   const { file } = useOutletContext<{ project: Project; file: File }>()
-  const actionData = useActionData<typeof action>()
   const navigation = useNavigation()
   const [form, { output }] = useForm({
     lastResult: navigation.state === 'idle' ? actionData?.lastResult : null,

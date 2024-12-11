@@ -1,5 +1,4 @@
-import type { LoaderFunctionArgs, MetaFunction } from 'react-router'
-import { Link, useLoaderData, useNavigate } from 'react-router'
+import { Link, useNavigate } from 'react-router'
 import { $path } from 'safe-routes'
 import {
   Button,
@@ -15,17 +14,19 @@ import {
   TableHeader,
   TableRow,
 } from '~/components/ui'
+import type { Route } from './+types/route'
 import { listProjects } from './queries.server'
 
-export const meta: MetaFunction = () => [{ title: 'Projects' }]
+export const meta: Route.MetaFunction = () => [{ title: 'Projects' }]
 
-export const loader = async ({ request }: LoaderFunctionArgs) => {
+export const loader = async ({ request }: Route.LoaderArgs) => {
   const projects = await listProjects()
   return { projects }
 }
 
-export default function Index() {
-  const { projects } = useLoaderData<typeof loader>()
+export default function Index({
+  loaderData: { projects },
+}: Route.ComponentProps) {
   const navigate = useNavigate()
 
   return (

@@ -2,19 +2,13 @@ import { getFormProps, getTextareaProps, useForm } from '@conform-to/react'
 import { parseWithZod } from '@conform-to/zod'
 import type { File, Project } from '@prisma/client'
 import { LoaderCircleIcon } from 'lucide-react'
-import type { ActionFunctionArgs } from 'react-router'
-import {
-  data,
-  Form,
-  useActionData,
-  useNavigation,
-  useOutletContext,
-} from 'react-router'
+import { data, Form, useNavigation, useOutletContext } from 'react-router'
 import { dataWithSuccess } from 'remix-toast'
 import { z } from 'zod'
 import { zx } from 'zodix'
 import { Button, Label, Stack, Textarea } from '~/components/ui'
 import { translateByGemini } from '~/services/translate-gemini'
+import type { Route } from './+types/route'
 import { updateFileOutput } from './mutations.server'
 import { getFile } from './queries.server'
 
@@ -22,7 +16,7 @@ const schema = z.object({
   prompt: z.string(),
 })
 
-export const action = async ({ request, params }: ActionFunctionArgs) => {
+export const action = async ({ request, params }: Route.ActionArgs) => {
   const { project: projectId, file: fileId } = zx.parseParams(params, {
     project: z.string(),
     file: zx.NumAsString,
@@ -62,9 +56,10 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
   )
 }
 
-export default function ProjectFileDetails() {
+export default function ProjectFileDetails({
+  actionData,
+}: Route.ComponentProps) {
   const { project, file } = useOutletContext<{ project: Project; file: File }>()
-  const actionData = useActionData<typeof action>()
   const navigation = useNavigation()
   const [form, { prompt }] = useForm({
     lastResult: navigation.state === 'idle' ? actionData?.lastResult : null,

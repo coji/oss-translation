@@ -1,17 +1,5 @@
 import { ArrowLeftIcon, LoaderCircleIcon } from 'lucide-react'
-import type {
-  ActionFunctionArgs,
-  LoaderFunctionArgs,
-  MetaFunction,
-} from 'react-router'
-import {
-  Form,
-  Link,
-  useActionData,
-  useLoaderData,
-  useNavigate,
-  useNavigation,
-} from 'react-router'
+import { Form, Link, useNavigate, useNavigation } from 'react-router'
 import { $path } from 'safe-routes'
 import { z } from 'zod'
 import { zx } from 'zodix'
@@ -34,8 +22,8 @@ import {
   TableHeader,
   TableRow,
 } from '~/components/ui'
-
 import dayjs from '~/libs/dayjs'
+import type { Route } from './+types/route'
 import {
   exportFiles,
   getProjectDetails,
@@ -43,17 +31,17 @@ import {
   startTranslationJob,
 } from './functions.server'
 
-export const meta: MetaFunction<typeof loader> = ({ data }) => [
+export const meta = ({ data }: Route.MetaArgs) => [
   { title: `${data?.project.id}` },
 ]
 
-export const loader = async ({ params }: LoaderFunctionArgs) => {
+export const loader = async ({ params }: Route.LoaderArgs) => {
   const { project: projectId } = zx.parseParams(params, { project: z.string() })
   const project = await getProjectDetails(projectId)
   return { project }
 }
 
-export const action = async ({ request, params }: ActionFunctionArgs) => {
+export const action = async ({ request, params }: Route.ActionArgs) => {
   const { project: projectId } = zx.parseParams(params, { project: z.string() })
   const formData = await request.formData()
 
@@ -102,9 +90,10 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
   }
 }
 
-export default function ProjectDetail() {
-  const { project } = useLoaderData<typeof loader>()
-  const actionData = useActionData<typeof action>()
+export default function ProjectDetail({
+  loaderData: { project },
+  actionData,
+}: Route.ComponentProps) {
   const navigation = useNavigation()
   const navigate = useNavigate()
 

@@ -1,7 +1,6 @@
-import type { LoaderFunctionArgs, MetaFunction } from 'react-router';
-import { Link, Outlet, useLoaderData } from 'react-router';
 import { ArrowLeftIcon } from 'lucide-react'
 import { basename } from 'node:path'
+import { Link, Outlet } from 'react-router'
 import { z } from 'zod'
 import { zx } from 'zodix'
 import {
@@ -14,13 +13,14 @@ import {
   NavTab,
   NavTabs,
 } from '~/components/ui'
+import type { Route } from './+types/route'
 import { getFile, getProject } from './queries.server'
 
-export const meta: MetaFunction<typeof loader> = ({ data }) => [
+export const meta = ({ data }: Route.MetaArgs) => [
   { title: `${data?.filename} - ${data?.project.id}` },
 ]
 
-export const loader = async ({ params }: LoaderFunctionArgs) => {
+export const loader = async ({ params }: Route.LoaderArgs) => {
   const { project: projectId, file: fileId } = zx.parseParams(params, {
     project: z.string(),
     file: zx.NumAsString,
@@ -30,8 +30,9 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
   return { project, file, filename: basename(file.path) }
 }
 
-export default function ProjectFileDetails() {
-  const { project, file } = useLoaderData<typeof loader>()
+export default function ProjectFileDetails({
+  loaderData: { project, file },
+}: Route.ComponentProps) {
   return (
     <Card>
       <CardHeader>

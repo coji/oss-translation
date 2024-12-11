@@ -1,4 +1,4 @@
-import { NavLink } from 'react-router';
+import { NavLink } from 'react-router'
 import { twc } from 'react-twc'
 
 export const NavTabs = twc.div`-mb-px flex gap-2`

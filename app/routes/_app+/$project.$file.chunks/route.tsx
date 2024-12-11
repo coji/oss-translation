@@ -1,5 +1,5 @@
 import type { File, Project } from '@prisma/client'
-import { useOutletContext } from 'react-router';
+import { useOutletContext } from 'react-router'
 import { Label, Textarea } from '~/components/ui'
 import { splitMarkdownByHeaders } from '~/libs/split-markdown'
 
