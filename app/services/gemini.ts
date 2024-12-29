@@ -2,10 +2,15 @@ import { GoogleGenerativeAI, type UsageMetadata } from '@google/generative-ai'
 import { match } from 'ts-pattern'
 import { z } from 'zod'
 
-export const ModelIdSchema = z.enum(['Gemini 1.5 Flash', 'Gemini 1.5 Pro'])
+export const ModelIdSchema = z.enum([
+  'Gemini 1.5 Flash',
+  'Gemini 1.5 Pro',
+  'Gemini 2.0 Flash',
+])
 export const ModelSchema = z.enum([
   'gemini-1.5-flash-latest',
-  'models/gemini-1.5-pro-latest',
+  'gemini-1.5-pro-latest',
+  'gemini-2.0-flash-exp',
 ])
 export type GeminiModels = z.infer<typeof ModelSchema>
 export const Models: Record<
@@ -13,7 +18,8 @@ export const Models: Record<
   z.infer<typeof ModelSchema>
 > = {
   'Gemini 1.5 Flash': 'gemini-1.5-flash-latest' as const,
-  'Gemini 1.5 Pro': 'models/gemini-1.5-pro-latest' as const,
+  'Gemini 1.5 Pro': 'gemini-1.5-pro-latest' as const,
+  'Gemini 2.0 Flash': 'gemini-2.0-flash-exp' as const,
 } as const
 
 export const callGemini = async ({
@@ -60,7 +66,7 @@ export const calcTokenCostUSD = (model: GeminiModels, usage: UsageMetadata) => {
       const candidatesTokenCost = (usage.candidatesTokenCount / 1000000) * 1.05
       return promptTokenCost + candidatesTokenCost
     })
-    .with('models/gemini-1.5-pro-latest', () => {
+    .with('gemini-1.5-pro-latest', () => {
       if (usage.promptTokenCount < 128 * 1000) {
         const promptTokenCost = (usage.promptTokenCount / 1000000) * 3.5
         const candidatesTokenCost =
@@ -70,6 +76,9 @@ export const calcTokenCostUSD = (model: GeminiModels, usage: UsageMetadata) => {
       const promptTokenCost = (usage.promptTokenCount / 1000000) * 7
       const candidatesTokenCost = (usage.candidatesTokenCount / 1000000) * 21
       return promptTokenCost + candidatesTokenCost
+    })
+    .with('gemini-2.0-flash-exp', () => {
+      return 0
     })
     .exhaustive()
 }

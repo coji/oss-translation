@@ -14,7 +14,7 @@ interface TranslateError {
   error: string
 }
 
-const MODEL = 'gemini-1.5-flash-latest' as const
+const MODEL = 'gemini-2.0-flash-exp' as const
 const MAX_TOKENS = 8192 as const
 
 interface TranslateProps {
