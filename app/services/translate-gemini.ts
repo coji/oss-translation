@@ -1,4 +1,5 @@
 import { google } from '@ai-sdk/google'
+import { GoogleGenerativeAI } from '@google/generative-ai'
 import { generateText } from 'ai'
 import { splitMarkdownByHeaders } from '~/libs/split-markdown'
 
@@ -12,7 +13,15 @@ interface TranslateError {
   error: string
 }
 
-const MODEL = 'gemini-2.0-flash-exp' as const
+export const countTokens = async (text: string, model: string) => {
+  const genAI = new GoogleGenerativeAI(
+    process.env.GOOGLE_GENERATIVE_AI_API_KEY ?? '',
+  )
+  const genModel = genAI.getGenerativeModel({ model })
+  const result = await genModel.countTokens(text)
+  return result.totalTokens
+}
+
 const MAX_TOKENS = 8192 as const
 
 interface TranslateProps {
@@ -24,7 +33,7 @@ export const translateByGemini = async ({
   systemPrompt,
   source,
 }: TranslateProps): Promise<TranslateSuccess | TranslateError> => {
-  const tokens = source.length
+  const tokens = await countTokens(source, 'gemini-2.0-flash-exp')
 
   const sections =
     tokens > MAX_TOKENS ? splitMarkdownByHeaders(source) : [source]
@@ -46,6 +55,7 @@ export const translateByGemini = async ({
       destinationText: finalDestinationText,
     }
   } catch (e) {
+    console.log(e)
     let errorMessage = ''
     if (e instanceof Error) {
       errorMessage = `${e.name}: ${e.message}, ${e.stack}`

@@ -45,6 +45,8 @@ export const startTranslationJob = async (projectId: string) => {
       source: file.content,
     })
 
+    console.log(file.path, ret.type)
+
     if (ret.type === 'success') {
       const updated = await prisma.file.update({
         where: { id: file.id },
@@ -61,8 +63,6 @@ export const startTranslationJob = async (projectId: string) => {
         where: { id: task.id },
         data: {
           output: ret.destinationText,
-          promptTokens: ret.inputTokens,
-          outputTokens: ret.outputTokens,
           status: 'done',
         },
       })
