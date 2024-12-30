@@ -28,7 +28,6 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
   }
 
   const file = await getFile(projectId, fileId)
-
   const ret = await translateByGemini({
     systemPrompt: submission.value.prompt,
     source: file.content,
@@ -51,7 +50,6 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
     },
     {
       message: 'Translation successful',
-      description: `input: ${ret.inputTokens?.toLocaleString()}, output: ${ret.outputTokens?.toLocaleString()}, cost: ${ret.cost}円`,
     },
   )
 }

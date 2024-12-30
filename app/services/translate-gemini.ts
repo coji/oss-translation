@@ -1,12 +1,10 @@
+import { google } from '@ai-sdk/google'
+import { generateText } from 'ai'
 import { splitMarkdownByHeaders } from '~/libs/split-markdown'
-import { calcTokenCostUSD, callGemini, countTokens } from './gemini'
 
 interface TranslateSuccess {
   type: 'success'
   destinationText: string
-  inputTokens?: number
-  outputTokens?: number
-  cost?: number
 }
 
 interface TranslateError {
@@ -26,37 +24,26 @@ export const translateByGemini = async ({
   systemPrompt,
   source,
 }: TranslateProps): Promise<TranslateSuccess | TranslateError> => {
-  const tokens = await countTokens(source, MODEL)
+  const tokens = source.length
 
   const sections =
     tokens > MAX_TOKENS ? splitMarkdownByHeaders(source) : [source]
 
   let finalDestinationText = ''
-  let totalInputTokens = 0
-  let totalOutputTokens = 0
-  let totalCost = 0
 
   try {
     for (const section of sections) {
-      const response = await callGemini({
+      const ret = await generateText({
+        model: google('gemini-2.0-flash-exp'),
         system: systemPrompt,
-        model: MODEL,
-        maxTokens: MAX_TOKENS,
-        message: section,
+        prompt: section,
       })
-
-      finalDestinationText += `${response.content}\n`
-      totalInputTokens += response.usage?.promptTokenCount || 0
-      totalOutputTokens += response.usage?.candidatesTokenCount || 0
-      totalCost += response.usage ? calcTokenCostUSD(MODEL, response.usage) : 0
+      finalDestinationText += `${ret.text}\n`
     }
 
     return {
       type: 'success',
       destinationText: finalDestinationText,
-      inputTokens: totalInputTokens,
-      outputTokens: totalOutputTokens,
-      cost: totalCost,
     }
   } catch (e) {
     let errorMessage = ''
