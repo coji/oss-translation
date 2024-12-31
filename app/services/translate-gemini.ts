@@ -46,6 +46,7 @@ export const translateByGemini = async ({
         model: google('gemini-2.0-flash-exp'),
         system: systemPrompt,
         prompt: section,
+        experimental_continueSteps: true,
       })
       finalDestinationText += `${ret.text}\n`
     }
