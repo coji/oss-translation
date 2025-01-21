@@ -18,22 +18,17 @@ export const exportFiles = async (projectId: string) => {
 
   // 出力先ディレクトリを作成して、ファイルを書き出す
   for (const file of files) {
-    console.log(`Exporting ${file.path}: ${file.output?.length} bytes`)
     if (!file.output) {
       continue
     }
-    console.time(`Exporting ${file.path}`)
 
     const outputPath = path.join(process.cwd(), 'exports', file.path)
     const outputDir = path.dirname(outputPath)
     await fs.mkdir(outputDir, { recursive: true })
-    await fs.writeFile(outputPath, file.output, {
-      encoding: 'utf-8',
-      flush: true,
-    })
+    await fs.writeFile(outputPath, file.output, { encoding: 'utf-8' })
+    console.log(`Exported ${file.path}: ${file.output?.length} bytes`)
 
     exportedFiles.push(file.path)
-    console.timeEnd(`Exporting ${file.path}`)
   }
 
   return exportedFiles
