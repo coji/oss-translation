@@ -5,8 +5,7 @@ import {
   useForm,
 } from '@conform-to/react'
 import { parseWithZod } from '@conform-to/zod'
-import { Form, Link, redirect } from 'react-router'
-import { $path } from 'safe-routes'
+import { Form, href, Link, redirect } from 'react-router'
 import { z } from 'zod'
 import {
   Button,
@@ -52,7 +51,7 @@ export const action = async ({ request }: Route.ActionArgs) => {
 
   await createFiles(project.id, files.value)
 
-  throw redirect($path('/'))
+  throw redirect(href('/'))
 }
 
 export default function NewProjectPage({ actionData }: Route.ComponentProps) {
@@ -127,7 +126,7 @@ export default function NewProjectPage({ actionData }: Route.ComponentProps) {
 
         <CardFooter className="flex flex-col items-stretch gap-2 sm:flex-row">
           <Button type="button" variant="ghost" asChild>
-            <Link to={$path('/')}>Cancel</Link>
+            <Link to={href('/')}>Cancel</Link>
           </Button>
 
           <Button type="submit">Create Project</Button>

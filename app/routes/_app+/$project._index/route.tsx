@@ -1,6 +1,5 @@
 import { ArrowLeftIcon, LoaderCircleIcon } from 'lucide-react'
-import { Form, Link, useNavigate, useNavigation } from 'react-router'
-import { $path } from 'safe-routes'
+import { Form, href, Link, useNavigate, useNavigation } from 'react-router'
 import { z } from 'zod'
 import { zx } from 'zodix'
 import {
@@ -236,7 +235,7 @@ export default function ProjectDetail({
                 <div>
                   <ul>
                     {actionData.export_result.map((file) => (
-                      <li key={file.id}>{file.path}</li>
+                      <li key={file}>{file}</li>
                     ))}
                   </ul>
                 </div>
@@ -265,9 +264,9 @@ export default function ProjectDetail({
                 className="hover:cursor-pointer"
                 onClick={() => {
                   navigate(
-                    $path('/:project/:file', {
+                    href('/:project/:file', {
                       project: project.id,
-                      file: file.id,
+                      file: String(file.id),
                     }),
                   )
                 }}

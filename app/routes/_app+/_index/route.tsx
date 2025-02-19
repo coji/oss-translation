@@ -1,5 +1,4 @@
-import { Link, useNavigate } from 'react-router'
-import { $path } from 'safe-routes'
+import { href, Link, useNavigate } from 'react-router'
 import {
   Button,
   Card,
@@ -56,7 +55,7 @@ export default function Index({
                   key={project.id}
                   className="hover:cursor-pointer"
                   onClick={() => {
-                    navigate($path('/:project', { project: project.id }))
+                    navigate(href('/:project', { project: project.id }))
                   }}
                 >
                   <TableCell>{project.id}</TableCell>
@@ -80,7 +79,7 @@ export default function Index({
       </CardContent>
       <CardFooter>
         <Button type="button" variant="default" asChild>
-          <Link to={$path('/new')}>New</Link>
+          <Link to={href('/new')}>New</Link>
         </Button>
       </CardFooter>
     </Card>
