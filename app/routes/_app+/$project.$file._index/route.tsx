@@ -58,7 +58,7 @@ export default function ProjectFileDetails({
         <Stack>
           <Label htmlFor={output.id}>Output</Label>
           <Textarea {...getTextareaProps(output)} rows={20} />
-          <div id={output.errorId} className="text-sm text-destructive">
+          <div id={output.errorId} className="text-destructive text-sm">
             {output.errors}
           </div>
 

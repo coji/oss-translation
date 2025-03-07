@@ -4,5 +4,5 @@ import tsconfigPaths from 'vite-tsconfig-paths'
 
 export default defineConfig({
   optimizeDeps: { exclude: ['projects'] },
-  plugins: [reactRouter(),  tsconfigPaths()],
+  plugins: [reactRouter(), tsconfigPaths()],
 })

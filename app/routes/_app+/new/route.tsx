@@ -76,21 +76,21 @@ export default function NewProjectPage({ actionData }: Route.ComponentProps) {
             <div>
               <Label htmlFor={id.id}>Name</Label>
               <Input {...getInputProps(id, { type: 'text' })} />
-              <div id={id.errorId} className="text-sm text-destructive">
+              <div id={id.errorId} className="text-destructive text-sm">
                 {id.errors}
               </div>
             </div>
             <div>
               <Label htmlFor={path.id}>Document Path</Label>
               <Input {...getInputProps(path, { type: 'text' })} />
-              <div id={path.errorId} className="text-sm text-destructive">
+              <div id={path.errorId} className="text-destructive text-sm">
                 {path.errors}
               </div>
             </div>
             <div>
               <Label htmlFor={pattern.id}>Glob Pattern</Label>
               <Input {...getInputProps(pattern, { type: 'text' })} />
-              <div id={pattern.errorId} className="text-sm text-destructive">
+              <div id={pattern.errorId} className="text-destructive text-sm">
                 {pattern.errors}
               </div>
             </div>
@@ -98,7 +98,7 @@ export default function NewProjectPage({ actionData }: Route.ComponentProps) {
             <div>
               <Label htmlFor={excludes.id}>Excludes</Label>
               <Input {...getInputProps(excludes, { type: 'text' })} />
-              <div id={excludes.errorId} className="text-sm text-destructive">
+              <div id={excludes.errorId} className="text-destructive text-sm">
                 {excludes.errors}
               </div>
             </div>
@@ -108,7 +108,7 @@ export default function NewProjectPage({ actionData }: Route.ComponentProps) {
               <Textarea {...getTextareaProps(description)} />
               <div
                 id={description.errorId}
-                className="text-sm text-destructive"
+                className="text-destructive text-sm"
               >
                 {description.errors}
               </div>
@@ -117,7 +117,7 @@ export default function NewProjectPage({ actionData }: Route.ComponentProps) {
             <div>
               <Label htmlFor={prompt.id}>Prompt</Label>
               <Textarea {...getTextareaProps(prompt)} />
-              <div id={prompt.errorId} className="text-sm text-destructive">
+              <div id={prompt.errorId} className="text-destructive text-sm">
                 {prompt.errors}
               </div>
             </div>

@@ -23,11 +23,11 @@ export default function TestPage() {
             <div className="mb-0.5 flex text-sm">
               <span>{index + 1}. </span>
               <span className="flex-1" />
-              <span className="text-sm text-muted-foreground">
+              <span className="text-muted-foreground text-sm">
                 {chunk.length.toLocaleString()} characters
               </span>
             </div>
-            <div className="whitespace-pre-wrap break-words rounded border bg-slate-50 px-3 py-2 text-sm">
+            <div className="rounded border bg-slate-50 px-3 py-2 text-sm break-words whitespace-pre-wrap">
               {chunk}
             </div>
           </div>

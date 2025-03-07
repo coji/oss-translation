@@ -1,12 +1,7 @@
 import { href, Link, useNavigate } from 'react-router'
 import {
   Button,
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
+  Stack,
   Table,
   TableBody,
   TableCell,
@@ -29,15 +24,16 @@ export default function Index({
   const navigate = useNavigate()
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Projects</CardTitle>
-        <CardDescription>
+    <Stack className="p-4">
+      <div>
+        <h1 className="text-xl font-semibold">Projects</h1>
+        <p className="text-muted-foreground">
           Projects are the top-level container for your workspaces. Create a
           project to get started.
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
+        </p>
+      </div>
+
+      <div>
         <div className="rounded-md border">
           <Table>
             <TableHeader>
@@ -68,7 +64,7 @@ export default function Index({
               {projects.length === 0 && (
                 <TableCell
                   colSpan={5}
-                  className="text-center text-muted-foreground"
+                  className="text-muted-foreground text-center"
                 >
                   No projects yet.
                 </TableCell>
@@ -76,12 +72,13 @@ export default function Index({
             </TableBody>
           </Table>
         </div>
-      </CardContent>
-      <CardFooter>
+      </div>
+
+      <div>
         <Button type="button" variant="default" asChild>
           <Link to={href('/new')}>New</Link>
         </Button>
-      </CardFooter>
-    </Card>
+      </div>
+    </Stack>
   )
 }
