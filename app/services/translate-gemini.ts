@@ -33,7 +33,7 @@ export const translateByGemini = async ({
   systemPrompt,
   source,
 }: TranslateProps): Promise<TranslateSuccess | TranslateError> => {
-  const tokens = await countTokens(source, 'gemini-2.0-flash-exp')
+  const tokens = await countTokens(source, 'gemini-2.0-flash')
 
   const sections =
     tokens > MAX_TOKENS ? splitMarkdownByHeaders(source) : [source]
@@ -43,7 +43,7 @@ export const translateByGemini = async ({
   try {
     for (const section of sections) {
       const ret = await generateText({
-        model: google('gemini-2.0-flash-exp'),
+        model: google('gemini-2.0-flash'),
         system: systemPrompt,
         prompt: section,
         experimental_continueSteps: true,
