@@ -4,7 +4,7 @@ import type { File, Project } from '@prisma/client'
 import { Form, useNavigation, useOutletContext } from 'react-router'
 import { z } from 'zod'
 import { zx } from 'zodix'
-import { Button, HStack, Label, Stack, Textarea } from '~/components/ui'
+import { Button, Label, Stack, Textarea } from '~/components/ui'
 import type { Route } from './+types/route'
 import { updateFileOutput } from './mutations.server'
 
@@ -61,21 +61,21 @@ export default function ProjectFileDetails({
           <div id={output.errorId} className="text-destructive text-sm">
             {output.errors}
           </div>
+        </Stack>
 
-          <HStack>
-            <Button
-              variant="secondary"
-              {...form.reset.getButtonProps()}
-              disabled={!form.dirty}
-              className="w-full"
-            >
-              Reset
-            </Button>
+        <Stack className="col-span-2">
+          <Button type="submit" disabled={!form.dirty} className="w-full">
+            Save
+          </Button>
 
-            <Button type="submit" disabled={!form.dirty} className="w-full">
-              Save
-            </Button>
-          </HStack>
+          <Button
+            variant="secondary"
+            {...form.reset.getButtonProps()}
+            disabled={!form.dirty}
+            className="w-full"
+          >
+            Reset
+          </Button>
         </Stack>
       </Form>
     </div>
