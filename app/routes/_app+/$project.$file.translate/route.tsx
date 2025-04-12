@@ -13,6 +13,7 @@ import { updateFileOutput } from './mutations.server'
 import { getFile } from './queries.server'
 
 const schema = z.object({
+  original: z.string(),
   prompt: z.string(),
 })
 
@@ -29,8 +30,9 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
 
   const file = await getFile(projectId, fileId)
   const ret = await translateByGemini({
-    systemPrompt: submission.value.prompt,
+    extraPrompt: submission.value.prompt,
     source: file.content,
+    prevTranslatedText: file.output ?? undefined,
   })
 
   if (ret.type === 'error') {
@@ -42,7 +44,7 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
     }
   }
 
-  await updateFileOutput(projectId, fileId, ret.destinationText)
+  await updateFileOutput(projectId, fileId, ret.translatedText)
 
   return dataWithSuccess(
     {
@@ -76,7 +78,13 @@ export default function ProjectFileDetails({
       >
         <Stack>
           <Label htmlFor="original">Original</Label>
-          <Textarea id="original" readOnly rows={15} value={file.content} />
+          <Textarea
+            id="original"
+            name="original"
+            readOnly
+            rows={15}
+            value={file.content}
+          />
         </Stack>
         <Stack>
           <Label htmlFor="output">Output</Label>
@@ -89,10 +97,10 @@ export default function ProjectFileDetails({
         </Stack>
 
         <Stack className="col-span-2">
-          <div>
-            <Label>Prompt</Label>
+          <Stack>
+            <Label>Extra Prompt</Label>
             <Textarea {...getTextareaProps(prompt)} />
-          </div>
+          </Stack>
 
           <Button
             type="submit"

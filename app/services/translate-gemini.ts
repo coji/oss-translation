@@ -1,11 +1,16 @@
 import { google } from '@ai-sdk/google'
-import { GoogleGenerativeAI } from '@google/generative-ai'
-import { generateText } from 'ai'
-import { splitMarkdownByHeaders } from '~/libs/split-markdown'
+import type { CoreMessage } from 'ai'
+import { generateObject } from 'ai'
+import { z } from 'zod'
+
+const outputSchema = z.object({
+  translatedText: z.string(),
+})
 
 interface TranslateSuccess {
   type: 'success'
-  destinationText: string
+  translatedText: string
+  diff?: string
 }
 
 interface TranslateError {
@@ -13,47 +18,48 @@ interface TranslateError {
   error: string
 }
 
-export const countTokens = async (text: string, model: string) => {
-  const genAI = new GoogleGenerativeAI(
-    process.env.GOOGLE_GENERATIVE_AI_API_KEY ?? '',
-  )
-  const genModel = genAI.getGenerativeModel({ model })
-  const result = await genModel.countTokens(text)
-  return result.totalTokens
-}
-
-const MAX_TOKENS = 8192 as const
-
 interface TranslateProps {
-  systemPrompt: string
   source: string
+  extraPrompt?: string
+  prevTranslatedText?: string
 }
 
 export const translateByGemini = async ({
-  systemPrompt,
   source,
+  extraPrompt,
+  prevTranslatedText,
 }: TranslateProps): Promise<TranslateSuccess | TranslateError> => {
-  const tokens = await countTokens(source, 'gemini-2.0-flash')
+  const systemPrompt =
+    'Translate the following text to Japanese. Markdowns should be left intact. If previous translated text is provided, try to keep the existing translation as much as possible and only translate the changed parts.'
+  const messages: CoreMessage[] = [
+    {
+      role: 'system',
+      content: systemPrompt,
+    },
+    {
+      role: 'user',
+      content: `Previous translated text: ${prevTranslatedText ?? ''}\n\nSource text: ${source}`,
+    },
+  ]
 
-  const sections =
-    tokens > MAX_TOKENS ? splitMarkdownByHeaders(source) : [source]
-
-  let finalDestinationText = ''
+  if (extraPrompt) {
+    messages.push({
+      role: 'user',
+      content: extraPrompt,
+    })
+  }
 
   try {
-    for (const section of sections) {
-      const ret = await generateText({
-        model: google('gemini-2.0-flash'),
-        system: systemPrompt,
-        prompt: section,
-        experimental_continueSteps: true,
-      })
-      finalDestinationText += `${ret.text}\n`
-    }
+    const ret = await generateObject({
+      model: google('gemini-2.5-pro-exp-03-25'),
+      messages,
+      schema: outputSchema,
+      temperature: 0,
+    })
 
     return {
       type: 'success',
-      destinationText: finalDestinationText,
+      ...ret.object,
     }
   } catch (e) {
     console.log(e)

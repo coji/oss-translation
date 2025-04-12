@@ -41,8 +41,8 @@ export const startTranslationJob = async (projectId: string) => {
     })
 
     const ret = await translateByGemini({
-      systemPrompt: project.prompt,
       source: file.content,
+      prevTranslatedText: file.output ?? undefined,
     })
 
     console.log(file.path, ret.type)
@@ -52,7 +52,7 @@ export const startTranslationJob = async (projectId: string) => {
         where: { id: file.id },
         data: {
           isUpdated: false,
-          output: ret.destinationText,
+          output: ret.translatedText,
           translatedAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
         },
@@ -62,7 +62,7 @@ export const startTranslationJob = async (projectId: string) => {
       await prisma.translationTask.update({
         where: { id: task.id },
         data: {
-          output: ret.destinationText,
+          output: ret.translatedText,
           status: 'done',
         },
       })
